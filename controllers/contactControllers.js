@@ -1,9 +1,26 @@
-const getContacts=(req,res)=>{
-     res.status(200).json({ message:"Get all contacts" });
-}
+const asyncHandler=require("../models/contactModel");
+const Contacts=require("../models/contactModel");
 
-const createContact=(req,res)=>{
-     res.status(200).json({ message:"Create new contact" });
+console.log(Contacts.find());
+
+const getContacts=async(req,res)=>{
+    const contacts=await Contacts.find();
+     res.status(200).json(contacts);
+};
+
+const createContact=async(req,res)=>{
+    console.log("the request body is ", req.body);
+    const { name,email,phone }=req.body;
+    if(!name || !email || !phone){
+        res.status(400);
+        throw new Error("All fields are mandatory !");
+    } 
+
+    const contact=await Contacts.create({
+        name,email,phone
+    });
+
+     res.status(201).json(contact);
 }
 
 const getContact=(req,res)=>{
